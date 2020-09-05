@@ -505,7 +505,7 @@ void Help_Math()
 void Help_Phys()
 {
   keypad();
-  Border(0, 16);
+  Border(0, 17);
   Print(0, "Physics", "");
   Print(1, "Skorost", "V=S/t");
   Print(2, "Sila tyajesti", "F=m*g");
@@ -523,6 +523,7 @@ void Help_Phys()
   Print(14, "Potencial Enrg", "E=m*g*h(kx^2/2)");
   Print(15, "Gidravl press", "F1/F2=S1/S2");
   Print(16, "Sila uprugosti", "F(upr)=k*D(I)");
+  Print(17, "Enotishe", "sila");
 }
 
 void less(String No)

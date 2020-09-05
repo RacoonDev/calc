@@ -480,24 +480,6 @@ void CheckValTimer()
     TimerS = 60;
   }
 }
-
-void Help_Eng()
-{
-  keypad();
-  Border(0, 16);
-  Print(0, "English", "");
-  Print(1, "involving", "vovlekat");
-  Print(2, "interfering", "vmeshivatca");
-  Print(3, "concern", "kosatca");
-  Print(4, "worry", "bespokoitca");
-  Print(5, "making", "delat");
-  Print(6, "picking", "");
-  Print(7, "make", "sdelat");
-  Print(8, "have", "imet");
-  Print(9, "", "");
-  Print(10, "", "");
-  Print(11, "", "");
-}
 void Help_Math()
 {
   keypad();
@@ -764,9 +746,6 @@ void Help()
     Help_Math();
     break;
   case 2:
-    Help_Eng();
-    break;
-  case 3:
     bells();
     break;
   case -1:
@@ -776,7 +755,7 @@ void Help()
     Timer();
     break;
   }
-  if (mode_count > 3)
+  if (mode_count > 2)
   {
     mode_count = 0;
   }

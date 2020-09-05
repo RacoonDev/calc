@@ -114,7 +114,6 @@ void printAll()
   lcd.setCursor(0, 1);
   lcd.print(cSign);
 }
-
 void E_printAll()
 {
   lcd.clear();
@@ -151,7 +150,6 @@ void E_printAll()
     break;
   }
 }
-
 void clearAll()
 {
   lcd.clear();

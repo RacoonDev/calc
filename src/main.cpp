@@ -3,15 +3,19 @@
 #include <Wire.h>
 #include <Keypad.h>
 #include <Arduino.h>
+#include "lib/GyverRGB/GyverRGB.h"
 #define R_Button 12
 #define L_Button 11
-#define LED 13
+#define redPin A1
+#define greenPin A2
+#define bluePin A3
+GRGB strip(A1, A2, A3);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 const byte ROWS = 4;
 const byte COLS = 4;
-byte rowPins[ROWS] = {A0, A1, A2, A3};
-byte colPins[COLS] = {5, 4, 3, 2};
+byte rowPins[ROWS] = {10, 9, 8, 7};
+byte colPins[COLS] = {6, 5, 4, 3};
 char hexaKeys[ROWS][COLS] = {
     {'.', '0', '=', '/'},
     {'1', '2', '3', '*'},
@@ -27,6 +31,9 @@ char cSign, prevKey;
 float fResult;
 unsigned long period_time = (long)5 * 24 * 60 * 60 * 1000;
 unsigned long my_timer;
+int hue, val;
+boolean hueFlag;
+float valK = 0.3;
 
 void BT1()
 {
@@ -60,7 +67,6 @@ void BT2()
 void Off()
 {
   lcd.noBacklight();
-  digitalWrite(LED, 0);
   isVal1 = 0;
   isVal2 = 0;
   isSign = 0;
@@ -70,7 +76,6 @@ void Off()
 void On()
 {
   lcd.backlight();
-  digitalWrite(LED, 1);
   BT2();
 }
 void Power()
@@ -765,21 +770,55 @@ void TimeChange()
   timeSecs = (sec % 3600ul) % 60ul;
 }
 
+void setFadeColor(int cPin1,int cPin2,int cPin3){
+  for(int i=0;i<=255;i++){
+    analogWrite(cPin1, i);
+    analogWrite(cPin2, 255-i);
+    analogWrite(cPin3, 255);
+    delay(1);
+  }
+}
+
 void setup()
 {
+  strip.setDirection(REVERSE);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
   pinMode(R_Button, INPUT_PULLUP);
   pinMode(L_Button, INPUT_PULLUP);
-  pinMode(LED, OUTPUT);
   lcd.init();
   Serial.begin(9600);
   my_timer = millis();
 }
+
+void Flame(){
+   if (hueFlag) {
+    hue += random(-1, 3);
+    if (hue > random(12, 16)) hueFlag = false;
+  } else {
+    hue -= random(-1, 3);
+    if (hue < random(0, 6)) hueFlag = true;
+  }
+  hue = constrain(hue, 3, 16);
+  val = val * (1 - valK) + map(hue, 3, 16, 20, 255) * valK;
+  Serial.println(String(hue) + " " + String(val));
+  strip.setHSV(hue, 255, val);
+  delay(random(10, 40));
+}
+
+
+
 void loop()
 {
+
   BT1();
   Power();
   if (dsp == 1)
   {
+
+Flame();
+
     if (mode < 0 || mode > 2)
     {
       mode = 0;
